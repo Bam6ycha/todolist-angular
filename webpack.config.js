@@ -31,5 +31,5 @@ module.exports = {
     hot: true,
     port: 3000
   },
-  plugins: [new ESLintPlugin({ options }), new HTMLWebpackPlugin()]
+  plugins: [new ESLintPlugin(options), new HTMLWebpackPlugin()]
 };

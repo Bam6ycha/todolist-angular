@@ -1,19 +1,23 @@
-import { IRequestOptions } from "./interfaces";
+import {
+  ICustomResponseObject,
+  LoadFunction,
+  reject,
+  resolve,
+  XHRStatuses
+} from "./interfaces";
 
 //! custom fetch
 
-const load = (url: string | URL, options: IRequestOptions = {}) =>
-  new Promise((resolve, reject) => {
+const load: LoadFunction = (url, options) =>
+  new Promise((resolve: resolve, reject: reject) => {
     if (options.signal && options.signal.aborted) {
       return reject(new DOMException("Aborted", "AbortError"));
     }
 
     const xhr = new XMLHttpRequest();
-
     xhr.responseType = options.responseType ?? "json";
 
     const newURL = url instanceof URL ? url.href : url;
-
     const request = new Request(newURL, options);
 
     if (options.headers) {
@@ -32,38 +36,33 @@ const load = (url: string | URL, options: IRequestOptions = {}) =>
     }
 
     xhr.onload = () => {
-      if (xhr.status < 200 && xhr.status > 299) {
+      if (
+        xhr.status === 200
+        // xhr.status > XHRStatuses["OK upperBound"]
+      ) {
         reject(new Error(`${xhr.status}`));
       }
     };
 
-    if (request.signal) {
-      request.signal.addEventListener("abort", xhr.abort);
+    xhr.onreadystatechange = (): void => {
+      if (xhr.readyState === 4) {
+        const customResponse: ICustomResponseObject = {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          url: xhr.responseURL,
+          body: xhr.response,
+          headers: xhr.getAllResponseHeaders()
+        };
 
-      xhr.onreadystatechange = (): void => {
-        if (xhr.readyState === 4) {
-          const options = {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            url: xhr.responseURL,
-            body: xhr.response
-          };
-          request.signal.removeEventListener("abort", xhr.abort);
-
-          resolve(options);
-        }
-      };
-    }
+        resolve(customResponse);
+      }
+    };
   });
 
 load("https://my-json-server.typicode.com/typicode/demo/comments", {
-  responseType: "arraybuffer",
-  headers: {
-    "Content-type": "application/x-www-form-urlencoded",
-    "Content-Language": "ru"
-  }
-}).then((result: Response) => console.log(result));
+  method: "GET"
+}).then((result) => console.log(result.body));
 
-fetch("https://my-json-server.typicode.com/typicode/demo/comments", {}).then(
-  (response) => console.log(Object.fromEntries(response.headers.entries()))
-);
+// fetch("https://my-json-server.typicode.com/typicode/demo/comments", {}).then(
+//   (response) => console.log(Object.fromEntries(response.headers.entries()))
+// );

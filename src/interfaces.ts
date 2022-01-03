@@ -1,7 +1,5 @@
 type BodyTypes = string | URLSearchParams | FormData | Blob | ArrayBuffer;
 
-type CredentialValues = "omit" | "same-origin" | "include";
-
 type ResponseType = "" | "arraybuffer" | "blob" | "document" | "json" | "text";
 
 interface IRequestOptions {
@@ -9,15 +7,37 @@ interface IRequestOptions {
   headers?: HeadersInit;
   body?: BodyTypes;
   signal?: AbortSignal;
-  credentilas?: CredentialValues;
-  referref?: string;
   responseType?: ResponseType;
 }
 
-interface IResponseObject {
+interface ICustomResponseObject {
   status: number;
   statusText: string;
-  headers: Headers;
+  url: string;
+  headers: string;
+  body: BodyTypes;
 }
 
-export { IRequestOptions, IResponseObject };
+type resolve = (value: ICustomResponseObject) => void;
+type reject = (error: DOMException | Error) => void;
+
+type LoadFunction = (
+  url: string | URL,
+  options: IRequestOptions
+) => Promise<ICustomResponseObject>;
+
+enum XHRStatuses {
+  OK = 200,
+  "OK created" = 201,
+  "OK upperBound" = 299,
+  "Not Modified" = 304
+}
+
+export {
+  IRequestOptions,
+  ICustomResponseObject,
+  LoadFunction,
+  reject,
+  resolve,
+  XHRStatuses
+};
