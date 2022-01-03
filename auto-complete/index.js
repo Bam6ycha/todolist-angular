@@ -1,6 +1,7 @@
 function reverseSearch(data, prefix, pivot, result, start) {
+  const lowerCasePrefix = prefix.toLowerCase();
   for (let i = pivot; i >= start; i--) {
-    if (data[i].toLowerCase().startsWith(prefix.toLowerCase())) {
+    if (data[i].toLowerCase().startsWith(lowerCasePrefix)) {
       result.unshift(data[i]);
     } else {
       break;
@@ -9,8 +10,9 @@ function reverseSearch(data, prefix, pivot, result, start) {
 }
 
 function directSearch(data, prefix, pivot, result, end) {
+  const lowerCasePrefix = prefix.toLowerCase();
   for (let j = pivot + 1; j <= end; j++) {
-    if (data[j].toLowerCase().startsWith(prefix.toLowerCase())) {
+    if (data[j].toLowerCase().startsWith(lowerCasePrefix)) {
       result.push(data[j]);
     } else {
       break;
@@ -19,7 +21,8 @@ function directSearch(data, prefix, pivot, result, end) {
 }
 
 function isContainsPrefix(data, pivot, prefix) {
-  if (data[pivot].toLowerCase().startsWith(prefix.toLowerCase())) {
+  const lowerCasePrefix = prefix.toLowerCase();
+  if (data[pivot].toLowerCase().startsWith(lowerCasePrefix)) {
     return true;
   }
   return false;
