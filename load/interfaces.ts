@@ -14,16 +14,19 @@ interface ICustomResponseObject {
   status: number;
   statusText: string;
   url: string;
-  headers: string;
+  headers: IHeaders;
   body: BodyTypes;
+}
+
+interface IHeaders {
+  [key: string]: string;
 }
 
 type resolve = (value: ICustomResponseObject) => void;
 type reject = (error: DOMException | Error) => void;
-
 type LoadFunction = (
   url: string | URL,
-  options: IRequestOptions
+  options?: IRequestOptions
 ) => Promise<ICustomResponseObject>;
 
 enum XHRStatuses {
@@ -39,5 +42,6 @@ export {
   LoadFunction,
   reject,
   resolve,
-  XHRStatuses
+  XHRStatuses,
+  IHeaders
 };

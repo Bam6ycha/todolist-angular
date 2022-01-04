@@ -4,7 +4,7 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 const options = require("./.eslintrc");
 
 module.exports = {
-  entry: "./src/index.ts",
+  entry: "./load/index.ts",
   devtool: "inline-source-map",
   mode: "development",
   module: {
