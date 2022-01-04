@@ -10,10 +10,9 @@ export class ListItem {
     return document.createElement("ul");
   }
 
-  public createListItem(value: string, callback: EventListener) {
+  public createListItem(value: string) {
     const liItem = document.createElement("li");
     liItem.textContent = value;
-    liItem.onclick = callback;
     liItem.style.cursor = "pointer";
     liItem.style.listStyleType = "none";
     this.element.prepend(liItem);
