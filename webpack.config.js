@@ -4,7 +4,7 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 const options = require("./.eslintrc");
 
 module.exports = {
-  entry: "./src/index.ts",
+  entry: "./auto-complete-ui/index.ts",
   devtool: "inline-source-map",
   mode: "development",
   module: {
@@ -31,11 +31,5 @@ module.exports = {
     hot: true,
     port: 3000
   },
-  plugins: [
-    new ESLintPlugin(options),
-    new HTMLWebpackPlugin({
-      template: path.resolve(__dirname, "src/index.html"),
-      filename: "index.html"
-    })
-  ]
+  plugins: [new ESLintPlugin(options), new HTMLWebpackPlugin()]
 };
