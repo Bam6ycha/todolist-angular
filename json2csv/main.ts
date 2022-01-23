@@ -1,31 +1,14 @@
 import path = require('path');
 import fs = require('fs/promises');
+import stream = require('stream');
 
 interface IData {
   [key: string]: string;
 }
 
-interface Dirent {
-  isFile(): boolean;
-
-  isDirectory(): boolean;
-
-  isBlockDevice(): boolean;
-
-  isCharacterDevice(): boolean;
-
-  isSymbolicLink(): boolean;
-
-  isFIFO(): boolean;
-
-  isSocket(): boolean;
-
-  name: string;
-}
-
-const inputParamenters: string[] = process.argv;
-const inputFileName: string = inputParamenters[2];
-const outputFileName: string = inputParamenters[3];
+const inputParameters: string[] = process.argv;
+const inputFileName: string = inputParameters[2];
+const outputFileName: string = inputParameters[3];
 
 const getInputPath = (): string | void => {
   if (inputFileName) {
@@ -33,73 +16,148 @@ const getInputPath = (): string | void => {
   }
 };
 
-const writeData = async (data: string): Promise<void> => {
-  const outputFilePath = path.join(__dirname, outputFileName);
-  if (await isOutputFileExist()) {
-    await fs.rm(outputFileName, { recursive: true });
-  }
+const transformStream = new stream.Transform({
+  transform(data, encoding = 'utf-8', callback) {
+    const transformData = data.toString();
+    callback(null, formationOfRightData(transformData));
+  },
+});
 
-  if (!(await isOutputFileExist())) {
-    await fs.appendFile(outputFilePath, data);
-  }
+let isFirstObject = true;
+const OPEN_BRACKET_INDEX = 2;
+
+const setCache = (): ((data?: string) => string) => {
+  let cache = '[';
+
+  return function (value?: string): string {
+    if (value === 'clean') {
+      return (cache = '[');
+    }
+
+    if (value) {
+      return (cache += value);
+    }
+
+    return cache;
+  };
 };
 
-const getfilesInRootFolder = async (): Promise<Dirent[]> =>
-  await fs.readdir(__dirname, { withFileTypes: true });
+const getCache = (cache: (data?: string) => string): string => {
+  return cache();
+};
 
-const isOutputFileExist = async (): Promise<boolean> => {
-  const fileNames = await getfilesInRootFolder();
-  for (let i = 0; i < fileNames.length; i++) {
-    if (fileNames[i].name === outputFileName && fileNames[i].isFile()) {
-      return true;
-    }
+const isEmptyCache = (cache: string): boolean => {
+  if (cache.length === 1) {
+    return true;
   }
+
   return false;
 };
 
-const transformData = (data: IData[]): string => {
-  const nessesaryField = data.map((item) => Object.keys(item))[0];
+const isFullData = (index: number): boolean => {
+  if (index === -1) {
+    return false;
+  }
 
-  const result: Array<string[] | string> = [nessesaryField, '\n'];
+  return true;
+};
 
-  for (let i = 0; i < data.length; i++) {
-    const row: string[] = [];
-    result.push(row);
+const getFirstObject = (data: string): [IData, number] => {
+  const firstCloseBracketIndex = data.indexOf('}');
 
-    for (let j = 0; j <= nessesaryField.length; j++) {
-      const object = data[i];
-      const computedPropery = object[nessesaryField[j]];
+  const object: [IData] = JSON.parse(
+    `${data.slice(0, firstCloseBracketIndex + 1)}]`,
+  );
 
-      if (computedPropery) {
-        row.push(computedPropery);
-        continue;
-      }
+  return [...object, firstCloseBracketIndex + OPEN_BRACKET_INDEX];
+};
 
-      if (j === nessesaryField.length) {
-        row.push('\n');
-      } else {
-        row.push(' '.repeat(3));
-      }
+const getNecessaryHeaders = (object: [IData]): string => {
+  return object
+    .map((item) => Object.keys(item))
+    .flat()
+    .join(' ');
+};
+
+const getNecessaryDataFromObjects = (
+  objects: IData[],
+  keys: string[],
+): string => {
+  const result = objects.map((object) => keys.map((key) => object[key]));
+  return result.join('\n');
+};
+
+const getNecessaryDataFromFirstObject = (data: string): string => {
+  const [object] = getFirstObject(data);
+  const headers = getNecessaryHeaders([object]).split(' ');
+  const values = headers.map((item: string) => object[item]);
+
+  return [[...headers], '\n', [...values], '\n'].join('');
+};
+
+const cache = setCache();
+const headers: string[] = [];
+
+const formationOfRightData = (data: string): string | void => {
+  if (isFirstObject) {
+    const [object, startIndex] = getFirstObject(data);
+    [getNecessaryHeaders([object])]
+      .join(' ')
+      .split(' ')
+      .forEach((header) => headers.push(header));
+
+    const dataForCache = data.slice(startIndex);
+    cache(dataForCache);
+
+    isFirstObject = false;
+
+    if (!isFullData(data.lastIndexOf(']'))) {
+      return getNecessaryDataFromFirstObject(data);
+    }
+
+    if (isFullData(data.lastIndexOf(']'))) {
+      const firstObjectData = getNecessaryDataFromFirstObject(data);
+      const otherObjectsData = getNecessaryDataFromObjects(
+        JSON.parse(getCache(cache)),
+        headers,
+      );
+
+      return [firstObjectData, otherObjectsData].join('');
     }
   }
 
-  return result.join(' ');
+  if (!isEmptyCache(getCache(cache))) {
+    const closeBracket = data.lastIndexOf('}');
+    const newData = data.slice(0, closeBracket + 1);
+    const objects = JSON.parse(`${getCache(cache)}${newData}]`);
+    cache('clean');
+    const dataForCache = data.slice(closeBracket + OPEN_BRACKET_INDEX);
+    cache(dataForCache);
+
+    return getNecessaryDataFromObjects(objects, headers);
+  }
+
+  if (isEmptyCache(getCache(cache))) {
+    const closeBracket = data.lastIndexOf('}');
+    const newData = data.slice(1, closeBracket + 1);
+    const objects = JSON.parse(`${getCache(cache)}${newData}]`);
+    const dataForCache = data.slice(closeBracket + OPEN_BRACKET_INDEX);
+    cache(dataForCache);
+
+    return getNecessaryDataFromObjects(objects, headers);
+  }
 };
 
 const readWriteData = async (): Promise<void> => {
   const fileHandle = await fs.open(getInputPath() as string, 'r');
   const readFile = fileHandle.createReadStream();
+  const fileHandleWrite = await fs.open(
+    path.join(__dirname, outputFileName),
+    'w',
+  );
+  const writableStream = fileHandleWrite.createWriteStream();
 
-  readFile.on('data', async (data) => {
-    const originalData: IData[] = JSON.parse(data.toString());
-    const transormedData = transformData(originalData);
-
-    await writeData(transormedData);
-  });
-
-  readFile.on('end', () => {
-    readFile.close();
-  });
+  readFile.pipe(transformStream).pipe(writableStream);
 };
 
 (async () => {

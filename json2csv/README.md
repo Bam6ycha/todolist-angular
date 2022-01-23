@@ -1,6 +1,6 @@
 # How to use
 
-1. Clone this repository. Write in your terminal (.git clone repositiry/name)
+1. Clone this repository. Write in your terminal (.git clone repository/name)
 2. Open root folder.
 3. Write in your terminal npm install
 4. Then write in your terminal 'cd json2csv'
