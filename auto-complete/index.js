@@ -28,7 +28,7 @@ function isContainsPrefix(data, pivot, prefix) {
   return false;
 }
 
-module.exports.createAutoComplete = function (data) {
+export default function createAutoComplete(data) {
   if (!data) {
     return [];
   }
@@ -61,4 +61,4 @@ module.exports.createAutoComplete = function (data) {
     }
     return result;
   };
-};
+}

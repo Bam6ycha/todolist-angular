@@ -1,0 +1,26 @@
+{
+  "name": "bam6ycha-st2021q3",
+  "version": "1.0.0",
+  "description": "**kosarev-d@mail.ru**",
+  "main": "index.ts",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "ts-node-dev --respawn ./autocomplete-be/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolling-scopes-school/bam6ycha-ST2021Q3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rolling-scopes-school/bam6ycha-ST2021Q3/issues"
+  },
+  "homepage": "https://github.com/rolling-scopes-school/bam6ycha-ST2021Q3#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.10",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8"
+  }
+}
