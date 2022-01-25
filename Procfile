@@ -1,0 +1,1 @@
+web: node ./autocomplete-be/index.ts
