@@ -1,1 +1,1 @@
-web: node ./autocomplete-be/index.ts
+web: ts-node ./autocomplete-be/index.ts
