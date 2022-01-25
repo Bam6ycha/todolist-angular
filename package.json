@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./autocomplete-be/index.js",
-    "postinstall": "tsc",
+    "postinstall": "tsc && mv -i -v public autocomplete-be/ && rm -v -rf autocomplete-be",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku autocomplete-be:main"
   },
