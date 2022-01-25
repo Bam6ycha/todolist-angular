@@ -13,10 +13,6 @@ const autoComplete = createAutoComplete(data) as (prefix: string) => string[];
 const port = process.env.PORT || 3000;
 
 const server = http.createServer(async (req, res) => {
-  const url = req.url as string;
-  const query = getQueryFromUrl(url);
-  const results = autoComplete(query);
-  const method = req.method;
   const stats = await getStats();
   const eTag = generateEtag(stats);
   const lastModified = await getFileInfo();
@@ -28,6 +24,11 @@ const server = http.createServer(async (req, res) => {
     res.end();
     return;
   }
+
+  const url = req.url as string;
+  const query = getQueryFromUrl(url);
+  const results = autoComplete(query);
+  const method = req.method;
 
   if (results.length && method === 'GET') {
     res.statusCode = 200;

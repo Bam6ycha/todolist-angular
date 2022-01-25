@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import eTag = require('etag');
 import { IncomingHttpHeaders } from 'http';
 
-const PATH_TO_DATA = path.join(__dirname, 'data.ts');
+const PATH_TO_DATA = path.join(__dirname, 'cities.ts');
 
 export const getQueryFromUrl = (url: string): string => {
   if (isMatch(url)) {
