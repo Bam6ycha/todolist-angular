@@ -2,10 +2,10 @@
   "name": "bam6ycha-st2021q3",
   "version": "1.0.0",
   "description": "**kosarev-d@mail.ru**",
-  "main": "index.ts",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node autocomplete-be/index.js",
     "postinstall": "npm run build",
     "build": "tsc",
     "deploy": "git add . && git commit -m Heroku && git push heroku autocomplete-be:main"
