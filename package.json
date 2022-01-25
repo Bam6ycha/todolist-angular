@@ -5,7 +5,10 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "ts-node-dev --respawn ./autocomplete-be/index.ts"
+    "start": "node ./autocomplete-be/index.js",
+    "postinstall": "tsc",
+    "watch-ts": "tsc -w",
+    "deploy": "git add . && git commit -m Heroku && git push heroku autocomplete-be:main"
   },
   "repository": {
     "type": "git",
