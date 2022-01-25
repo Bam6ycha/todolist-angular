@@ -39,7 +39,6 @@ const server = http.createServer(async (req, res) => {
     if (results.length && method === 'GET') {
       setCache(res, eTag, lastModified);
       sendData(res, results);
-      console.log(12);
     } else {
       sendUserError(res);
     }
