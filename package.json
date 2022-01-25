@@ -5,8 +5,7 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "node autocomplete-be/index.js",
-    "postinstall": "tsc"
+    "start": "ts-node-dev --respawn ./autocomplete-be/index.ts"
   },
   "repository": {
     "type": "git",
