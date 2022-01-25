@@ -28,7 +28,7 @@ function isContainsPrefix(data, pivot, prefix) {
   return false;
 }
 
-export default function createAutoComplete(data) {
+export function createAutoComplete(data) {
   if (!data) {
     return [];
   }
