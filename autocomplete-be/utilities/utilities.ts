@@ -61,7 +61,6 @@ const sendCachedData = (res: ServerResponse, lastModified: string): void => {
   res.statusMessage = 'Not Modified';
   res.statusCode = 304;
   res.end();
-  return;
 };
 
 const sendData = (res: ServerResponse, data: string[]) => {
@@ -75,7 +74,7 @@ const sendData = (res: ServerResponse, data: string[]) => {
 
 const setCache = (res: ServerResponse, eTag: string, lastModified: string) => {
   res.setHeader('etag', `${eTag}`);
-  res.setHeader('Cache-Control', 'max-age=3600');
+  res.setHeader('Cache-Control', 'no-cache,max-age=3600');
   res.setHeader('last-modified', `${lastModified}`);
 };
 
