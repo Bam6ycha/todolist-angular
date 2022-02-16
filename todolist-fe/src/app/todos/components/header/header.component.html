@@ -1,0 +1,23 @@
+<header class="header">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>What needs to be done?</mat-label>
+    <input
+      class="header__addTodo"
+      matInput
+      placeholder="What needs to be done?"
+      [value]="inputValue"
+      autocomplete="off"
+      autoFocus
+      (keyup)="handleChange($event)"
+      (keyup.enter)="addTodo()"
+    />
+  </mat-form-field>
+  <button
+    (click)="addTodo()"
+    class="header__addTodo_button"
+    mat-raised-button
+    color="primary"
+  >
+    +
+  </button>
+</header>
