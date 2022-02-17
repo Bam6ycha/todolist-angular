@@ -19,7 +19,7 @@ export class ToDoInterceptor implements HttpInterceptor {
     let url: string = '';
 
     if (!environment.production) {
-      url = 'http://localhost:3004/todoList/';
+      url = environment.apiUrl;
     }
 
     const newRequest = request.clone({
