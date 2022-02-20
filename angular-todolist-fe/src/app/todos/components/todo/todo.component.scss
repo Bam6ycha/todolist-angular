@@ -1,0 +1,72 @@
+.delete {
+  background-image: url(../../../../assets/svg/trash_bin_icon-icons.com_67981.svg);
+  background-repeat: no-repeat;
+  background-size: 20px;
+  width: 30px;
+  height: 30px;
+  background-position: center;
+}
+
+.todoItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: rgba(116, 116, 116, 0.7);
+  font-size: 1.2rem;
+  height: 50px;
+  padding: 5px;
+  margin: 5px;
+  position: relative;
+}
+
+.todo-list .todoItem:last-child {
+  border-bottom: none;
+}
+
+.edit {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  font-size: 1.2rem;
+  font-family: inherit;
+  font-weight: inherit;
+  text-align: center;
+  color: inherit;
+  padding: 6px;
+  border: 1px solid #999;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.489);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 50px;
+}
+
+.todo-list li.editing {
+  border-bottom: none;
+  padding: 0;
+}
+
+.todo-list li.editing .edit {
+  display: block;
+  width: calc(100% - 43px);
+  padding: 12px 16px;
+  margin: 0 0 0 43px;
+}
+
+.todo-list li .edit {
+  display: none;
+}
+
+.todo-list li.editing:last-child {
+  margin-bottom: -1px;
+}
+
+label {
+  display: block;
+  cursor: pointer;
+}
+
+.editing label {
+  display: none;
+}
