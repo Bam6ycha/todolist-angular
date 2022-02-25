@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import mongoose from 'mongoose';
 
-import { Model } from '../schemas/users';
+import { Model } from '../schemas/todoSchema';
 import { ToDoInterface } from '../types/interfaces/interfaces';
 import { getSkipLimit } from '../utilities/utilities';
 
