@@ -13,7 +13,7 @@ export interface StateInterface {
 }
 
 export interface ToDoInterface {
-  id: string | mongoose.Types.ObjectId;
+  _id: string | mongoose.Types.ObjectId;
   message: string;
   isCompleted: boolean;
   lastModified?: string | null;
