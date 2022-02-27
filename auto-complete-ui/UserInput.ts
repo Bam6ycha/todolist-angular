@@ -1,27 +1,27 @@
-import { data } from "./data";
-import { UnOrderedList } from "./UnOrderedList";
-import { createAutoComplete } from "../auto-complete/index.js";
+import { data } from './data';
+import { UnOrderedList } from './UnOrderedList';
+import { createAutoComplete } from '../auto-complete/index.js';
 
 const autoComplete = createAutoComplete(data) as (prefix: string) => string[];
 
 export class UserInput {
   public element: HTMLInputElement;
 
-  private unOrneredList: UnOrderedList;
+  private unOrderedList: UnOrderedList;
 
   constructor() {
-    this.element = this.createInputElemetn();
-    this.unOrneredList = new UnOrderedList();
+    this.element = this.createInputElement();
+    this.unOrderedList = new UnOrderedList();
     this.onInput();
     this.changeValue();
   }
 
-  private createInputElemetn(): HTMLInputElement {
-    return document.createElement("input");
+  private createInputElement(): HTMLInputElement {
+    return document.createElement('input');
   }
 
   private changeValue(): void {
-    this.unOrneredList.onClick(this.element);
+    this.unOrderedList.onClick(this.element);
   }
 
   private getInputValue(): string {
@@ -29,19 +29,20 @@ export class UserInput {
   }
 
   private onInput(): void {
-    const UnOrderedList = this.unOrneredList.element;
+    const UnOrderedList = this.unOrderedList.element;
 
     this.element.oninput = () => {
-      const countOfRednerElements = 60;
-      let nextCountOfRenderElements = countOfRednerElements;
-      let previousCountOfRenderElements = countOfRednerElements;
+      const countOfRenderElements = 60;
+      let nextCountOfRenderElements = countOfRenderElements;
+      let previousCountOfRenderElements = countOfRenderElements;
 
       const values = autoComplete(this.getInputValue());
       const result = values.map(
-        (value) => `<li style="cursor: pointer;list-style: none;">${value}</li>`
+        (value) =>
+          `<li style="cursor: pointer;list-style: none;">${value}</li>`,
       );
 
-      UnOrderedList.innerHTML = result.slice(0, countOfRednerElements).join("");
+      UnOrderedList.innerHTML = result.slice(0, countOfRenderElements).join('');
 
       window.onscroll = function infiniteScroll() {
         if (nextCountOfRenderElements <= result.length) {
@@ -52,13 +53,13 @@ export class UserInput {
             windowRelativeBottom <
             document.documentElement.clientHeight + 100
           ) {
-            nextCountOfRenderElements += 60;
+            nextCountOfRenderElements += countOfRenderElements;
 
             UnOrderedList.innerHTML += result
               .slice(previousCountOfRenderElements, nextCountOfRenderElements)
-              .join("");
+              .join('');
 
-            previousCountOfRenderElements += 60;
+            previousCountOfRenderElements += countOfRenderElements;
           }
         } else {
           window.onscroll = null;
