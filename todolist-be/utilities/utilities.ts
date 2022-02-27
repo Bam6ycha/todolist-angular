@@ -32,13 +32,13 @@ export const hasQuery = (request: Request): boolean => {
 export const writeResponseData = async (
   data: ToDoInterface[],
 ): Promise<void> => {
-  const pathToFile = path.join(`./todolist-be`, `/data`, '/data.json');
+  const pathToFile = path.join(`./todolist-be`, '/data.json');
 
   await fs.appendFile(pathToFile, JSON.stringify(data));
 };
 
 export const sendBodyAsStream = async (response: Response): Promise<void> => {
-  const pathToFile = path.join(`./todolist-be`, `/data`, '/data.json');
+  const pathToFile = path.join(`./todolist-be`, '/data.json');
   const readStream = (await fs.open(pathToFile, 'r')).createReadStream();
 
   readStream.pipe<Response<ToDoInterface[]>>(response.status(ResponseCodes.OK));
