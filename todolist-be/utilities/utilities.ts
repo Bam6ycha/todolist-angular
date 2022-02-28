@@ -1,12 +1,7 @@
-import { Request, Response } from 'express';
-import fs from 'fs/promises';
-import path from 'path';
+import { Request } from 'express';
 
 import { ResponseCodes } from '../types/enums/responseCodes';
-import {
-  CorsDefaultInterface,
-  ToDoInterface,
-} from '../types/interfaces/interfaces';
+import { CorsDefaultInterface } from '../types/interfaces/interfaces';
 
 export const corsOptions: CorsDefaultInterface = {
   origin: '*',
@@ -27,23 +22,4 @@ export const hasQuery = (request: Request): boolean => {
   }
 
   return false;
-};
-
-export const writeResponseData = async (
-  data: ToDoInterface[],
-): Promise<void> => {
-  const pathToFile = path.join(`./todolist-be`, '/data.json');
-
-  await fs.appendFile(pathToFile, JSON.stringify(data));
-};
-
-export const sendBodyAsStream = async (response: Response): Promise<void> => {
-  const pathToFile = path.join(`./todolist-be`, '/data.json');
-  const readStream = (await fs.open(pathToFile, 'r')).createReadStream();
-
-  readStream.pipe<Response<ToDoInterface[]>>(response.status(ResponseCodes.OK));
-
-  // readStream.on('end', () => {
-  //   fs.rm(pathToFile);
-  // });
 };
