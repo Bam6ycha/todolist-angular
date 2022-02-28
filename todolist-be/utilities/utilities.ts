@@ -43,7 +43,7 @@ export const sendBodyAsStream = async (response: Response): Promise<void> => {
 
   readStream.pipe<Response<ToDoInterface[]>>(response.status(ResponseCodes.OK));
 
-  readStream.on('end', () => {
-    fs.rm(pathToFile);
-  });
+  // readStream.on('end', () => {
+  //   fs.rm(pathToFile);
+  // });
 };

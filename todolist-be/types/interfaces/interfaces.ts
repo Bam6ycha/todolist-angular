@@ -13,10 +13,10 @@ export interface StateInterface {
 }
 
 export interface ToDoInterface {
-  _id: string | mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
   message: string;
   isCompleted: boolean;
-  lastModified?: string | null;
+  lastModified: string;
 }
 
 export type ExpressFn = (

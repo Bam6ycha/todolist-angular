@@ -5,27 +5,24 @@ import { Model } from '../schemas/todoSchema';
 import { ToDoInterface } from '../types/interfaces/interfaces';
 import { getSkipLimit } from '../utilities/utilities';
 
-export const all = (): Promise<ToDoInterface[]> =>
+export const all = async () =>
   Model.find<ToDoInterface>({
     lastModified: null,
   })
     .select('message isCompleted _id')
-    .exec();
+    .cursor();
 
-export const pagination = (
-  page: string,
-  limit: string,
-): Promise<ToDoInterface[]> => {
+export const pagination = (page: string, limit: string) => {
   return Model.find<ToDoInterface>({ lastModified: null })
     .skip(getSkipLimit(page, limit))
     .limit(Number(limit))
     .select('message completed _id')
-    .exec();
+    .cursor();
 };
 
 export const useId = (
   id: string | mongoose.Types.ObjectId,
-): Promise<ToDoInterface> => Model.findById({ _id: id }).exec();
+): Promise<ToDoInterface> => Model.findById({ id: id }).exec();
 
 export const addTodo = (request: Request): Promise<ToDoInterface> => {
   const { _id: id, isCompleted, message }: ToDoInterface = request.body;

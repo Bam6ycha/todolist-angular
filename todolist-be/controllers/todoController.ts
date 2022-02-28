@@ -1,11 +1,11 @@
+import mongoose from 'mongoose';
+import JSONStream from 'JSONStream';
+
 import * as TodoModel from '../models/todoModel';
+
 import { ResponseCodes } from '../types/enums/responseCodes';
 import { ExpressFn, ToDoInterface } from '../types/interfaces/interfaces';
-import {
-  hasQuery,
-  sendBodyAsStream,
-  writeResponseData,
-} from '../utilities/utilities';
+import { hasQuery } from '../utilities/utilities';
 
 export const all: ExpressFn = async (
   request,
@@ -20,8 +20,7 @@ export const all: ExpressFn = async (
 
     const todos = await TodoModel.all();
 
-    await writeResponseData(todos);
-    await sendBodyAsStream(response);
+    todos.pipe(JSONStream.stringify()).pipe(response.status(ResponseCodes.OK));
   } catch (error) {
     console.log(error);
   }
@@ -31,10 +30,9 @@ export const pagination: ExpressFn = async (request, response, _) => {
   try {
     const { page, limit } = request.query as { [key: string]: string };
 
-    const todos: ToDoInterface[] = await TodoModel.pagination(page, limit);
+    const todos = TodoModel.pagination(page, limit);
 
-    await writeResponseData(todos);
-    await sendBodyAsStream(response);
+    todos.pipe(JSONStream.stringify()).pipe(response.status(ResponseCodes.OK));
   } catch (error) {
     console.log(error);
 
@@ -88,7 +86,7 @@ export const deleteTodo: ExpressFn = async (request, response, _) => {
   } catch (error) {
     console.log(error);
 
-    response.status(ResponseCodes.NOT_FOUND).json({
+    response.status(ResponseCodes.NO_CONTENT).json({
       error: 'Nothing was found',
     });
   }
@@ -98,7 +96,7 @@ export const updateTodo: ExpressFn = async (request, response, _) => {
   try {
     await TodoModel.changeToDo(request);
 
-    response.status(200).json({
+    response.status(ResponseCodes.OK).json({
       message: 'Todo was successfully updated',
     });
   } catch (error) {
