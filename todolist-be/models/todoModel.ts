@@ -16,13 +16,14 @@ export const pagination = (page: string, limit: string) => {
   return Model.find<ToDoInterface>({ lastModified: null })
     .skip(getSkipLimit(page, limit))
     .limit(Number(limit))
-    .select('message completed _id')
+    .select('message isCompleted _id')
     .cursor();
 };
 
 export const useId = (
   id: string | mongoose.Types.ObjectId,
-): Promise<ToDoInterface> => Model.findById({ id: id }).exec();
+): Promise<ToDoInterface> =>
+  Model.findById({ _id: id }).select('message isCompleted _id').exec();
 
 export const addTodo = (request: Request): Promise<ToDoInterface> => {
   const { _id: id, isCompleted, message }: ToDoInterface = request.body;
